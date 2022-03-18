@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .serializers import CourseSerializer
+from django.http import HttpResponse, JsonResponse
 from .models import Course
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
@@ -19,14 +20,17 @@ def CourseView(request):
    
    snippet = Course.objects.all()
    if request.method == 'GET':
-        serializer = CourseSerializer(snippet)
-        return Response(serializer.data)
+      serializer = CourseSerializer(snippet, many = True)
+      return JsonResponse(serializer.data, safe=False)
 
+# Customizable class based view
 class SnippetList(APIView):
 
    def get(self, request, format=None):
       snippets = Course.objects.all()
       serializer = CourseSerializer(snippets, many=True)
+
       return Response(serializer.data)
+
 
    permission_classes = [permissions.IsAuthenticatedOrReadOnly]

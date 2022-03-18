@@ -11,6 +11,6 @@ router.register(r'courses', CourseViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
-    path('func-courses/', CourseView),
-    path('class-course/', SnippetList.as_view()),
+    path('function-based-courses/', CourseView),
+    path('class-based-courses/', SnippetList.as_view()),
 ]
