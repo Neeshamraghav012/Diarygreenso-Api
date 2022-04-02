@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime
-
+from django.db.models import signals
+from django.dispatch import receiver
 
 
 class Course(models.Model):
@@ -41,3 +42,54 @@ class Course(models.Model):
 
 		verbose_name_plural = "Courses-sinx"
 		ordering = ["-overall_rating"]
+
+
+class Rating(models.Model):
+
+	course = models.ForeignKey(Course, on_delete = models.CASCADE)
+	user = models.ForeignKey(User, on_delete = models.CASCADE)
+	review = models.CharField(max_length = 3000, null = True, blank = True)
+	rating = models.IntegerField(default = 0)
+
+	def __str__(self):
+
+		return f"{self.user.username} rate {self.course.name} {self.rating}"
+
+	class  Meta:
+
+		verbose_name_plural = "Course-Ratings"
+
+
+@receiver(signals.post_save, sender = Course) 
+def course_signal(sender, instance, created, **kwargs):
+	print("Save method is called")
+
+
+@receiver(signals.pre_save, sender = Course)
+def check_course_description(sender, instance, **kwargs):
+	if instance.description:
+	    instance.description = 'This is a worderfull Course'
+
+
+
+
+class TotalRating(models.Model):
+	course = models.ForeignKey(Course, on_delete = models.CASCADE)
+	total_rating = models.IntegerField(default = 0)
+
+	def __str__(self):
+
+		return f"{self.course.name} has {self.total_rating} rating."
+
+
+
+class Watchlist(models.Model):
+
+	user = models.ForeignKey(User, on_delete = models.CASCADE)
+	courses = models.ForeignKey(Course, on_delete = models.CASCADE)
+
+	def __str__(self):
+
+		return f"{self.user.username}'s playlist!"
+
+
