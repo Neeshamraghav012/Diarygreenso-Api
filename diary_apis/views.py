@@ -52,7 +52,7 @@ def RatingView(request, pk):
 
     serializer = TotalRatingSerializer(ratings)
 
-    return serializer.data
+    return Response(serializer.data)
 
   else:
 

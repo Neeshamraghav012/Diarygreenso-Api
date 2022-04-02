@@ -7,6 +7,6 @@ from diary_apis.views import RatingView
 
 urlpatterns = [
 
-    path('ratingss/', RatingView, name = "course-rating"),
+    path('ratings/<int:pk>/', RatingView, name = "course-rating"),
 
 ]
